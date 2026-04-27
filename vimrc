@@ -7,7 +7,13 @@
 " have made, as well as sanely reset options when re-sourcing .vimrc
 set nocompatible
 " autocmd VimEnter * botright 12split +term | wincmd k
-
+set guifont=Monaco:h14
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs\
+  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 " Attempt to determine the type of a file based on its name and possibly its
 " contents. Use this to allow intelligent auto-indenting for each filetype,
 " and for plugins that are filetype specific.
@@ -24,7 +30,6 @@ Plug 'vim-airline/vim-airline'
 Plug 'ayu-theme/ayu-vim' " or other package manager
 Plug 'folke/tokyonight.nvim'
 Plug 'agude/vim-eldar'
-" Plug 'iagorrr/noctis-high-contrast.nvim'
 call plug#end()
 "...
 set termguicolors     " enable true colors support
@@ -48,7 +53,6 @@ if has('syntax')
     let g:eldar_cyan    = "#00ffff"
     let g:eldar_blue    = "#9f9fff"
     let g:eldar_magenta = "#ff00ff"
-
     syntax enable             " Turn on syntax highlighting
     silent! colorscheme eldar " Custom color scheme
 endif
@@ -100,14 +104,15 @@ no <down> <Nop>
 
 set shortmess+=I
 let mapleader='l'
-nnoremap <leader>q :wqa!<CR>
-"let g:black_use_virtualenv = 0
 
-"augroup black_on_save
-"  autocmd!
-"  autocmd BufWritePre *.py Black
-"augroup end
-nnoremap <silent> <leader>n :windo stopinsert<CR>
+nnoremap <leader>q :wqa!<CR>
+
+"let g:black_use_virtualenv = 0
+augroup black_on_save
+    autocmd!
+    autocmd BufWritePre *.py Black
+augroup end
+noremap <silent> <leader>n :windo stopinsert<CR>
 
 nnoremap <F9> :Black<CR>
 
@@ -153,8 +158,6 @@ set smartcase
 set relativenumber
 
 " Allow backspacing over autoindent, line breaks and start of insert action
-set backspace=indent,eol,start
-
 " When opening a new line and no filetype-specific indenting is enabled, keep
 " the same indent as the line you're currently on. Useful for READMEs, etc.
 set autoindent
@@ -176,7 +179,6 @@ set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
 set confirm
 
 " Use visual bell instead of beeping when doing something wrong
-"set visualbell
 
 " And reset the terminal code for the visual bell. If visualbell is set, and
 " this line is also included, vim will neither flash nor beep. If visualbell
@@ -188,7 +190,7 @@ set mouse=a
 
 " Set the command window height to 2 lines, to avoid many cases of having to
 " "press <Enter> to continue"
-set cmdheight=2
+set cmdheight=3
 
 " Display line numbers on the left
 set number
@@ -201,15 +203,12 @@ set notimeout ttimeout ttimeoutlen=200
 " Set wrap features
 set wrap
 set tw=85
-
-" Visually indicate tabs and end of lines
-set listchars=tab:,eol:¬
-
+set colorcolumn=86
+set listchars=tab:▸\ ,eol:¬
 " Set non printing characters
-"set list
 
 " Shortcut to nonprinting charaters
-"nmap <leader>l :set list!<CR>
+"nmap <leader>l :se[t list!<CR>
 
 noremap <leader>c :bd<CR>
 "------------------------------------------------------------
@@ -225,7 +224,6 @@ set expandtab
 
 " Indentation settings for using hard tabs for indent. Display tabs as
 " four characters wide.
-"set shiftwidth=4
 set tabstop=8
 
 
@@ -242,6 +240,3 @@ map Y y$
 " next search
 nnoremap <C-L> :nohl<CR><C-L>
 set list
-            
-            
-            
